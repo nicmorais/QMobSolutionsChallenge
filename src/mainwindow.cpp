@@ -121,11 +121,11 @@ void MainWindow::addItem()
             lastId = currentId;
         }
     }
-
-    productDialog.setProductId(restModel->index(0, 0).data(Qt::DisplayRole).toInt() + 1);
+    ++lastId;
+    productDialog.setProductId(lastId);
 
     if (productDialog.exec() == QDialog::Accepted) {
-        restModel->insertProduct(lastId + 1,
+        restModel->insertProduct(lastId,
                                  productDialog.productName(),
                                  productDialog.productPrice());
     }
