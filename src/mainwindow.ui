@@ -35,7 +35,7 @@
     <item row="1" column="0">
      <widget class="QTableView" name="tableView">
       <property name="sortingEnabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
     </item>

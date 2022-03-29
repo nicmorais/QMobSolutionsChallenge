@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QMessageBox>
+#include <QSortFilterProxyModel>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -60,7 +61,9 @@ MainWindow::MainWindow(QWidget* parent)
     //    });
     // Esta solucao eh melhor, simplesmente faco o setModel e a view sera atualizada sempre que necessario
     restModel = new RESTModel{u"https://3pcu3xj46l.execute-api.sa-east-1.amazonaws.com/items"_qs, this};
-    ui->tableView->setModel(restModel);
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(restModel);
+    ui->tableView->setModel(proxyModel);
     ui->tableView->addAction(ui->actionRemoveSelected);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
