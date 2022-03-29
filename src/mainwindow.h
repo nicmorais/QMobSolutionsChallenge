@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QBoxLayout>
 #include "restmodel.h"
+#include <QToolBar>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -22,7 +24,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow* ui;
         RESTModel* restModel;
-
+        QToolBar *toolbar;
     private Q_SLOTS:
         void removeSelectedItem();
         void modelNetworkFinished(int statusCode);

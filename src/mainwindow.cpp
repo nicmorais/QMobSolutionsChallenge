@@ -43,6 +43,13 @@ MainWindow::MainWindow(QWidget* parent)
     ui->tableView->setLocale(QLocale::system());
     auto* notEditableDelegate = new NotEditableDelegate(this);
     ui->tableView->setItemDelegateForColumn(0, notEditableDelegate);
+
+    toolbar = new QToolBar{this};
+    toolbar->addAction(ui->actionAddItem);
+    toolbar->addAction(ui->actionRemoveSelected);
+    toolbar->addAction(ui->actionUpdate);
+    ui->horizontalLayout->addWidget(toolbar);
+
 }
 
 MainWindow::~MainWindow()
@@ -62,7 +69,7 @@ void MainWindow::removeSelectedItem()
 void MainWindow::modelNetworkFinished(int statusCode)
 {
     if (statusCode != 200 && statusCode != 0) {
-        QMessageBox errorMessage;
+        QMessageBox errorMessage{this};
         errorMessage.setWindowTitle(tr("Error"));
         errorMessage.setText(tr("Could not perform request: Status Code %1").arg(statusCode));
         errorMessage.setIcon(QMessageBox::Warning);
@@ -72,7 +79,7 @@ void MainWindow::modelNetworkFinished(int statusCode)
 
 void MainWindow::about()
 {
-    QMessageBox aboutMessage;
+    QMessageBox aboutMessage{this};
     aboutMessage.setWindowTitle(tr("About"));
     aboutMessage.setText(tr("Initially made by Sandro Andrade (QMob Solutions), latterly edited by Nicolas Morais"));
     aboutMessage.setIcon(QMessageBox::Information);
