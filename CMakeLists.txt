@@ -15,18 +15,18 @@ find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        restmodel.h
-        restmodel.cpp
-        resources.qrc
-        productdialog.h
-        productdialog.cpp
-        productdialog.ui
-        noteditabledelegate.h
-        noteditabledelegate.cpp
+        src/main.cpp
+        src/mainwindow.cpp
+        src/mainwindow.h
+        src/mainwindow.ui
+        src/restmodel.h
+        src/restmodel.cpp
+        src/resources.qrc
+        src/productdialog.h
+        src/productdialog.cpp
+        src/productdialog.ui
+        src/noteditabledelegate.h
+        src/noteditabledelegate.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
