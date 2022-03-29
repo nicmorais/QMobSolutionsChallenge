@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/update.png</file>
-        <file>icons/qt_logo.png</file>
+        <file>assets/qt_logo.png</file>
+        <file>assets/update.png</file>
     </qresource>
 </RCC>

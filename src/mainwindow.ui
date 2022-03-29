@@ -72,7 +72,7 @@
   <action name="actionUpdate">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icons/update.png</normaloff>:/icons/update.png</iconset>
+     <normaloff>:/assets/update.png</normaloff>:/assets/update.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Update Table</string>
@@ -101,7 +101,7 @@
   <action name="actionAboutQt">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icons/qt_logo.png</normaloff>:/icons/qt_logo.png</iconset>
+     <normaloff>:/assets/qt_logo.png</normaloff>:/assets/qt_logo.png</iconset>
    </property>
    <property name="text">
     <string>About Qt</string>
