@@ -29,5 +29,6 @@ class MainWindow : public QMainWindow
         void about();
         void addItem();
         void update();
+        void loadTableWidget();
 };
 #endif // MAINWINDOW_H

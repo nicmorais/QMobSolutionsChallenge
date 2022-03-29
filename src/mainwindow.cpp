@@ -17,42 +17,8 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
     // Solução com QTableWidget
-    auto* nam = new QNetworkAccessManager{this};
-    auto* reply = nam->get(QNetworkRequest{u"https://3pcu3xj46l.execute-api.sa-east-1.amazonaws.com/items"_qs});
-    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
-        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    loadTableWidget();
 
-        if (statusCode == 200) {
-            auto jsonDocument = QJsonDocument::fromJson(reply->readAll());
-
-            if (jsonDocument.isObject()) {
-                ui->tableWidget->setColumnCount(jsonDocument.object()["Items"].toArray()[0].toObject().count());
-                ui->tableWidget->setRowCount(jsonDocument.object()["Count"].toInt());
-                int row = 0;
-
-                for (const auto& value : jsonDocument.object()["Items"].toArray()) {
-                    auto object = value.toObject();
-
-                    for (int i = 0; i < object.count(); ++i) {
-                        const auto& value = object.value(object.keys().at(i));
-                        QTableWidgetItem* item = nullptr;
-
-                        if (value.isString()) {
-                            item = new QTableWidgetItem(value.toString());
-                        } else if (value.isDouble()) {
-                            item = new QTableWidgetItem(QString::number(value.toDouble()));
-                        }
-
-                        ui->tableWidget->setItem(row, i, item);
-                    }
-
-                    ++row;
-                }
-            }
-        } else {
-            qDebug() << "QNetworkReply finished with status code:" << statusCode;
-        }
-    });
     // Solução com QTableView
     //    // Esta solucao nao eh muito interessante, pois exige que o programador realize o connect
     //    auto *restModel = new RESTModel{u"https://3pcu3xj46l.execute-api.sa-east-1.amazonaws.com/items"_qs, this};
@@ -65,6 +31,8 @@ MainWindow::MainWindow(QWidget* parent)
     proxyModel->setSourceModel(restModel);
     ui->tableView->setModel(proxyModel);
     ui->tableView->addAction(ui->actionRemoveSelected);
+    ui->tableView->addAction(ui->actionAddItem);
+    ui->tableView->addAction(ui->actionUpdate);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
@@ -94,7 +62,7 @@ void MainWindow::removeSelectedItem()
 
 void MainWindow::modelNetworkFinished(int statusCode)
 {
-    if (statusCode != 200) {
+    if (statusCode != 200 && statusCode != 0) {
         QMessageBox errorMessage;
         errorMessage.setWindowTitle(tr("Error"));
         errorMessage.setText(tr("Could not perform request: Status Code %1").arg(statusCode));
@@ -143,4 +111,47 @@ void MainWindow::update()
         this->setCursor(Qt::ArrowCursor);
         ui->tableView->setEnabled(true);
     }, Qt::SingleShotConnection);
+    loadTableWidget();
+}
+
+void MainWindow::loadTableWidget()
+{
+  ui->tableWidget->clear();
+  auto* nam = new QNetworkAccessManager{this};
+  auto* reply = nam->get(QNetworkRequest{u"https://3pcu3xj46l.execute-api.sa-east-1.amazonaws.com/items"_qs});
+  connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (statusCode == 200) {
+      auto jsonDocument = QJsonDocument::fromJson(reply->readAll());
+
+      if (jsonDocument.isObject()) {
+        ui->tableWidget->setColumnCount(jsonDocument.object()["Items"].toArray()[0].toObject().count());
+        ui->tableWidget->setRowCount(jsonDocument.object()["Count"].toInt());
+        int row = 0;
+
+        for (const auto& value : jsonDocument.object()["Items"].toArray()) {
+          auto object = value.toObject();
+
+          for (int i = 0; i < object.count(); ++i) {
+            const auto& value = object.value(object.keys().at(i));
+            QTableWidgetItem* item = nullptr;
+
+            if (value.isString()) {
+              item = new QTableWidgetItem(value.toString());
+            } else if (value.isDouble()) {
+              item = new QTableWidgetItem(QString::number(value.toDouble()));
+            }
+
+            ui->tableWidget->setItem(row, i, item);
+          }
+
+          ++row;
+        }
+      }
+    } else {
+      qDebug() << "QNetworkReply finished with status code:" << statusCode;
+    }
+    reply->deleteLater();
+  });
 }
